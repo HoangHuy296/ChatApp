@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "302633328440",
+    "firebase_url": "https://chatappzalo-173ee-default-rtdb.firebaseio.com",
+    "project_id": "chatappzalo-173ee",
+    "storage_bucket": "chatappzalo-173ee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:302633328440:android:fc6371c3132e80eba22bcd",
+        "android_client_info": {
+          "package_name": "hcmute.spkt.mssv19110218.chatappzalo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "302633328440-o6c06qmrp91jfs3ou4m0bi6gqpbqjnvt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSDp011O5rwrrfhzdsnD23Yozvv5fxfJw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "302633328440-o6c06qmrp91jfs3ou4m0bi6gqpbqjnvt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

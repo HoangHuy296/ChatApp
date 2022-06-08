@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/ChatAppZalo/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1965" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/drawable/add.xml" value="0.2045" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/drawable/addfriend.xml" value="0.2045" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/drawable/back.xml" value="0.2045" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/drawable/botron_button.xml" value="0.1965" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/drawable/botron_button2.xml" value="0.1965" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/drawable/call.xml" value="0.2045" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/drawable/creategroup.xml" value="0.2045" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/drawable/dauchamden.xml" value="0.1965" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/drawable/edit_text_rework.xml" value="0.144" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1965" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/drawable/ic_right_arrow.xml" value="0.1965" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/drawable/message.xml" value="0.2045" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/drawable/qr_code.xml" value="0.2045" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/drawable/receive_drawable.xml" value="0.2045" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/drawable/search.xml" value="0.2045" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/drawable/send.xml" value="0.2045" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/drawable/sent_drawable.xml" value="0.2045" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/drawable/settings.xml" value="0.2045" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/drawable/textbox_outline.xml" value="0.1965" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/layout-v28/activity_create_account.xml" value="0.25416666666666665" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/layout/activity_chat.xml" value="0.264" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/layout/activity_create_account.xml" value="0.264" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/layout/activity_group_chat.xml" value="0.25416666666666665" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/layout/activity_group_chat2.xml" value="0.25416666666666665" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/layout/activity_insert_name.xml" value="0.25416666666666665" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/layout/activity_insert_phone.xml" value="0.2" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/layout/activity_login.xml" value="0.25416666666666665" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/layout/activity_otpcheck.xml" value="0.264" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/layout/activity_register.xml" value="0.264" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/layout/activity_start.xml" value="0.264" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/layout/bar_layout.xml" value="0.264" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/layout/chatbox.xml" value="0.4" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/layout/fragment__insert_phone.xml" value="0.25416666666666665" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/layout/fragment__login.xml" value="0.25416666666666665" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/layout/fragment__o_t_p_check.xml" value="0.4" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/layout/fragment_insert_name.xml" value="0.25416666666666665" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/layout/msg_receive.xml" value="0.25025641025641027" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/layout/msg_send.xml" value="0.264" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/menu/bottom_navigation_selector.xml" value="0.25416666666666665" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/menu/callnavigation.xml" value="0.25025641025641027" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/menu/navigationbottom.xml" value="0.25416666666666665" />
+        <entry key="..\:/ChatAppZalo/app/src/main/res/menu/navigationtop.xml" value="0.25416666666666665" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
