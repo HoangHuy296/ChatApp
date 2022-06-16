@@ -1,10 +1,10 @@
 package hcmute.spkt.mssv19110218.chatappzalo.Models;
 
 public class Message {
-    private String messageId;
-    private String message;
-    private String senderID;
-    private String imageUrl;
+    private String messageId; //khởi tạo messageId
+    private String message; //khởi tạo message
+    private String senderID; //khởi tạo senderID
+    private String imageUrl; //khởi tạo imageUrl
 
     public String getVoiceUrl() {
         return voiceUrl;
@@ -25,6 +25,8 @@ public class Message {
         this.senderID = senderID;
         this.timestamp = timestamp;
     }
+
+    //các hàm được getter và setter sinh ra
 
     public String getMessageId() {
         return messageId;
