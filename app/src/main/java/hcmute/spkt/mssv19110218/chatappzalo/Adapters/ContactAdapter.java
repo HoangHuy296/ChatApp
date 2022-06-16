@@ -26,8 +26,8 @@ import hcmute.spkt.mssv19110218.chatappzalo.R;
 import hcmute.spkt.mssv19110218.chatappzalo.databinding.ContactboxBinding;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactViewHolder> {
-    Context context; //* Context chứa adapter
-    ArrayList<Contact> contacts;    //* Danh sách chứa contact
+    Context context; //Context chứa adapter
+    ArrayList<Contact> contacts;    //Khởi tạo danh sách chứa contact
 
     public ContactAdapter() {
     }
@@ -39,12 +39,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         notifyDataSetChanged();
     }
 
-    /**=
-     * Hàm onCreateViewHolder sẽ tạo ViewHolder để map các dữ liệu từ adapter xuống view
-     * @param parent view parent của adapter
-     * @param viewType loại view
-     * @return
-     */
     @NonNull
     @Override
     public ContactViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -52,60 +46,54 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         return new ContactViewHolder(view);
     }
 
-    /**
-     * Hàm onBindViewHolder binding các value xuống các view holder
-     * @param holder các view trong ContactViewHolder
-     * @param position vị trí của từng đối tượng UserModel
-     */
     @Override
     public void onBindViewHolder(@NonNull ContactViewHolder holder, int position) {
-        //* Khởi tạo biến database để nhận dữ liệu từ Firebasedatabase
+        //Khởi tạo biến database để nhận dữ liệu từ Firebasedatabase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        //* Nhận dữ liệu từ Firebasedatabase với đường dẫn "users" được cung cấp trực tiếp
+        //Nhận dữ liệu từ Firebasedatabase với đường dẫn "users" được cung cấp trực tiếp
         DatabaseReference reference = database.getReference("users");
 
-        //* Lây contact ở vị trí position
+        //Lấy contact ở vị trí position
         Contact contact = contacts.get(position);
-        //* Gán contact.getName() vào nameContact trong viewHolder
+        //Gán nameContact bằng contact.getName() vào trong viewHolder
         holder.binding.nameContact.setText(contact.getName());
-        //* Gán contact.getPhoneNo() vào phoneContact trong viewHolder
+        //Gán phoneContact bằng contact.getPhoneNo() vào trong viewHolder
         holder.binding.phoneContact.setText(contact.getPhoneNo());
 
         reference.addValueEventListener(new ValueEventListener() {
             @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
             @Override
-            /**@param item lây từng item trên Realtime Database xuống*/
             public void onDataChange(@NonNull DataSnapshot item) {
-                //* Khởi tạo biến phoneContact để nhận dữ  liệu contact từ phone
+                //Khởi tạo biến phoneContact để nhận dữ  liệu contact từ phone
                 String phoneContact = contact.getPhoneNo();
-                //* Khởi tạo biến kiểm tra isHasUser
+                //Khởi tạo biến kiểm tra isHasUser
                 boolean isHasUser = false;
-                //* Chạy vòng lặp trong từ con của nút "users"
+                //Chạy vòng lặp trong từ con của nút "users"
                 for (DataSnapshot dataSnapshot : item.getChildren()) {
-                    //* Sử dụng model User để nhận dữ liệu từ Firebase
+                    //Sử dụng model User để nhận dữ liệu từ Firebase
                     User user = dataSnapshot.getValue(User.class);
-                    //* Khởi tạo biến phoneAuth để nhận giá trị phoneNuber lấy xuống từ Firebase
+                    //Khởi tạo biến phoneAuth để nhận giá trị phoneNuber lấy xuống từ Firebase
                     String phoneAuth = Objects.requireNonNull(user).getPhoneNumber();
-                    //* Nếu giá trị của phone lấy xuống từ Firebase bằng với giá trị phone từ contact của điện thoại ->
+                    //Nếu giá trị của phone lấy xuống từ Firebase bằng với giá trị phone từ contact của điện thoại ->
                     if (phoneAuth.equals(phoneContact)) {
-                        //* Gán giá trị mới cho isHasUser  = true
+                        //Gán giá trị mới cho isHasUser  = true
                         isHasUser = true;
-                        //* Kết thúc quá trình kiểm tra -> thoát hẳn ra khỏi vòng lặp for
                         break;
                     }
                 }
-                //* Ẩn button add friend đi
+                //Ẩn button add friend
                 holder.binding.btnAddFriend.setVisibility(View.GONE);
-                //* Show TextView
+                //Hiện TextView added
                 holder.binding.added.setVisibility(View.VISIBLE);
-                //* Nếu giá trị của isHasUser là true ->
+                //Nếu giá trị của isHasUser là true
                 if (isHasUser)
-                    //* Gán giá trị cho TextView = "Added"
-                    //* --> nghĩa là số điện thoại đã được tạo trên Firebase
+                    //Gán giá trị cho TextView = "Added"
+                    //Đã có tài khoản đăng kí với sđt này
                     holder.binding.added.setText("Added");
-                else //* Ngược lại
-                    //* Gán giá trị cho TextView = "No register"
-                    //* --> Nghĩa là số điện thoại chưa được tạo trên Firebase
+                //Ngược lại
+                else
+                    //Gán giá trị cho TextView = "No register"
+                    //Chưa có tài khoản đăng kí với sđt này
                     holder.binding.added.setText("No register");
             }
 
@@ -118,12 +106,12 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
 
     @Override
     public int getItemCount() {
-        //* Trả getItemCount về chiếu dài của list contact
+        //trả về chiếu dài của list contact
         return contacts.size();
     }
 
     public static class ContactViewHolder extends RecyclerView.ViewHolder {
-        ContactboxBinding binding; //* Create RowConversationContactBinding
+        ContactboxBinding binding; //tạo các view của ContactboxBinding
         public ContactViewHolder(@NonNull View itemView) {
             super(itemView);
             binding = ContactboxBinding.bind(itemView);
