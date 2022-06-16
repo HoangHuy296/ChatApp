@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+//hàm set quyền cho ứng dụng
 public class Permissions {
     public boolean isRecordingOk(Context context) {
         return ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;

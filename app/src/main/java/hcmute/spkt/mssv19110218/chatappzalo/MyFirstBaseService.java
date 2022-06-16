@@ -19,16 +19,20 @@ import com.google.firebase.messaging.RemoteMessage;
 import hcmute.spkt.mssv19110218.chatappzalo.Activity.MainActivity;
 
 public class MyFirstBaseService extends FirebaseMessagingService {
+    //khi nhận được tin nhắn
     @Override
     public void onMessageReceived(@NonNull @NotNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-
+        //tin nhắn sẽ được nhận qua onMessageReceive (RemoteMessage) và có thể được gửi qua
         RemoteMessage.Notification notification = remoteMessage.getNotification();
+        //chạy hàm sendNotification và get tittle và body của tin nhắn
         sendNotification(notification.getTitle(), notification.getBody());
 
     }
 
+    //hàm gửi tin nhắn
     private void sendNotification(String title, String messageBody) {
+        //khi bấm vào noti sẽ chuyển đến mainActivity với currentId đã đăng nhập
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
