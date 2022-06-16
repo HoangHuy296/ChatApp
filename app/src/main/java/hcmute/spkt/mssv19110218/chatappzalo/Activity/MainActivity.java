@@ -7,11 +7,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -29,6 +31,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import hcmute.spkt.mssv19110218.chatappzalo.R;
 import hcmute.spkt.mssv19110218.chatappzalo.Models.User;
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase database;
     ArrayList<User> users;
     UsersAdapter usersAdapter;
+    FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         changeBackgroundAcionbar();
+
+//        binding.bottomNavigationView.setitemac
+
         database = FirebaseDatabase.getInstance();
         users = new ArrayList<>();
         usersAdapter = new UsersAdapter(this, users);
@@ -116,4 +123,31 @@ public class MainActivity extends AppCompatActivity {
         assert actionBar != null;
         actionBar.setBackgroundDrawable(colorDrawable);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.addfriend){
+            startActivity(new Intent(MainActivity.this, ContactActivity.class));
+            return true;
+        }else if (id==R.id.userprofile){
+            startActivity(new Intent(MainActivity.this, UserProfileActivity.class));
+            return true;
+        }else if (id==R.id.logout){
+            Map<String,Object> map = new HashMap<>();
+            auth=FirebaseAuth.getInstance();
+            FirebaseDatabase.getInstance()
+                    .getReference("users")
+                    .child(auth.getUid())
+                    .updateChildren(map,((error, ref) -> {
+                        FirebaseAuth.getInstance().signOut();
+                        startActivity(new Intent(MainActivity.this, StartActivity.class));
+                        finish();
+                    }));
+//            FirebaseAuth.getInstance().signOut();
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

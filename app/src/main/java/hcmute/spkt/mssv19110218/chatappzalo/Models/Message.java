@@ -1,7 +1,20 @@
 package hcmute.spkt.mssv19110218.chatappzalo.Models;
 
 public class Message {
-    private String messageId, message, senderID, imageUrl;
+    private String messageId;
+    private String message;
+    private String senderID;
+    private String imageUrl;
+
+    public String getVoiceUrl() {
+        return voiceUrl;
+    }
+
+    public void setVoiceUrl(String voiceUrl) {
+        this.voiceUrl = voiceUrl;
+    }
+
+    private String voiceUrl;
     private long timestamp;
 
     public Message() {

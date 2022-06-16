@@ -29,6 +29,7 @@ import hcmute.spkt.mssv19110218.chatappzalo.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
 
+    //khai báo biến sử dụng
     ActivityLoginBinding binding;
     ProgressDialog dialog;
     FirebaseAuth auth;
@@ -45,30 +46,31 @@ public class LoginActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
 
+        //Hiện dialog process
         dialog = new ProgressDialog(this);
         dialog.setTitle("Login");
         dialog.setMessage("Đang đăng nhập....");
         dialog.setCancelable(false);
         users = new ArrayList<>();
         usersAdapter = new UsersAdapter(this, users);
+        btnContinue();
+    }
 
+    public void btnContinue(){
         binding.continueBtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 login();
             }
         });
-        if (auth.getCurrentUser()!=null)
-        {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-        }
     }
-
+    //hàm login
     private void login(){
-        final String phoneLogin = binding.editPhone.getText().toString();
-        final String passLogin = binding.editPassword.getText().toString();
+        //Lấy chuỗi của sdt và mật khẩu
+        final String phoneLogin = binding.editPhone.getText().toString().trim();
+        final String passLogin = binding.editPassword.getText().toString().trim();
 
+        //lấy users trong database
         DatabaseReference reference = database.getReference("users");
 
 

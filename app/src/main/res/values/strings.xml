@@ -26,4 +26,7 @@
     <string name="online">online</string>
     <string name="password">Nhập mật khẩu</string>
     <string name="notificationPassword">Vui lòng nhập mật khẩu của bạn</string>
+    <string name="userprofile">Trang cá nhân</string>
+    <string name="added">Added</string>
+    <string name="logout">Đăng xuất</string>
 </resources>

@@ -28,7 +28,7 @@
                 app:tint="@color/white"
                 android:layout_gravity="center"
                 android:layout_marginEnd="10dp"/>
-            
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/image"
                 android:layout_width="49dp"
@@ -63,6 +63,19 @@
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="match_parent"
@@ -89,7 +102,6 @@
                 android:paddingTop="15dp"
                 android:paddingEnd="30dp"
                 android:paddingBottom="15dp">
-
                 <requestFocus />
             </EditText>
             <ImageView
@@ -113,36 +125,43 @@
                 android:background="@drawable/send"
                 android:visibility="invisible" />
 
-            <ImageButton
-                android:id="@+id/btnvoice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignEnd="@id/msgToSend"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="50dp"
-                android:background="@drawable/voice"
-                />
-            <com.devlomi.record_view.RecordView
+<!--            <ImageButton-->
+<!--                android:id="@+id/btnvoice"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_alignEnd="@id/msgToSend"-->
+<!--                android:layout_centerVertical="true"-->
+<!--                android:layout_gravity="center_vertical"-->
+<!--                android:layout_marginEnd="50dp"-->
+<!--                android:background="@drawable/voice" />-->
+
+            <RelativeLayout
+                android:id="@+id/rl2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@id/btnvoice"
-                app:slide_to_cancel_arrow="@drawable/recv_ic_arrow"
-                app:slide_to_cancel_arrow_color="#000000"
-                app:slide_to_cancel_bounds="8dp"
-                app:slide_to_cancel_margin_right="10dp"
-                app:slide_to_cancel_text="Slide To Cancel"
-                app:counter_time_color="#ff0000"
-                />
+                android:layout_height="wrap_content">
+
+                <com.devlomi.record_view.RecordButton
+                    android:id="@+id/btnvoice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="50dp"
+                    android:background="@drawable/voice" />
+
+                <com.devlomi.record_view.RecordView
+                    android:id="@+id/recordView"
+                    android:layout_width="match_parent"
+                    android:layout_height="51dp"
+                    android:layout_toLeftOf="@id/btnvoice"
+                    app:counter_time_color="#ff0000"
+                    app:slide_to_cancel_arrow="@drawable/recv_ic_arrow"
+                    app:slide_to_cancel_arrow_color="#000000"
+                    app:slide_to_cancel_bounds="8dp"
+                    app:slide_to_cancel_margin_right="10dp"
+                    app:slide_to_cancel_text="Slide To Cancel" />
+            </RelativeLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/cardView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 </androidx.constraintlayout.widget.ConstraintLayout>

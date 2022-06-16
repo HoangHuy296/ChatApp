@@ -47,6 +47,26 @@
         <entry key="..\:/ChatAppZalo/app/src/main/res/menu/callnavigation.xml" value="0.25025641025641027" />
         <entry key="..\:/ChatAppZalo/app/src/main/res/menu/navigationbottom.xml" value="0.25416666666666665" />
         <entry key="..\:/ChatAppZalo/app/src/main/res/menu/navigationtop.xml" value="0.25416666666666665" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/drawable/custom_btn_add_contact.xml" value="0.1965" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/drawable/logout.xml" value="0.1965" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/drawable/userprofile.xml" value="0.124" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/activity_chat.xml" value="0.264" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/activity_contact.xml" value="0.25416666666666665" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/activity_login.xml" value="0.25416666666666665" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/activity_otpcheck.xml" value="0.25416666666666665" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/activity_start.xml" value="0.25416666666666665" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/activity_user_profile.xml" value="0.25416666666666665" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/bar_layout.xml" value="0.25416666666666665" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/chatbox.xml" value="0.25416666666666665" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/contactbox.xml" value="0.25416666666666665" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/msg_receive.xml" value="0.25416666666666665" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/msg_send.xml" value="0.25416666666666665" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/playeraudio.xml" value="0.25416666666666665" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/userprofile.xml" value="0.25416666666666665" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/menu/callnavigation.xml" value="0.25416666666666665" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/menu/navigationbottom.xml" value="0.25416666666666665" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/menu/navigationtop.xml" value="0.11302083333333333" />
       </map>
     </option>
   </component>
