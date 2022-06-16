@@ -5,6 +5,5 @@
         android:id="@+id/call"
         android:icon="@drawable/call"
         android:title="@string/call"
-        app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
 </menu>

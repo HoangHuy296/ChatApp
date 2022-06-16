@@ -101,7 +101,6 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
     public class UserViewHolder extends RecyclerView.ViewHolder {
 
         ChatboxBinding binding;
-
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
             binding = ChatboxBinding.bind(itemView);
