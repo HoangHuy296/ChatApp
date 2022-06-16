@@ -51,12 +51,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        //Lấy database hiện tại
         database = FirebaseDatabase.getInstance();
-
+        //sử dụng dịch vụ FirebaseMessaging
         FirebaseMessaging.getInstance()
+                //lấy token của user
                 .getToken()
                 .addOnSuccessListener(new OnSuccessListener<String>() {
+                    //update lại HashMap với token
                     @Override
                     public void onSuccess(String token) {
                         HashMap<String, Object> map = new HashMap<>();
@@ -67,21 +69,24 @@ public class MainActivity extends AppCompatActivity {
                                 .updateChildren(map);
                     }
                 });
-
+        //Hàm đổi màu background
         changeBackgroundAcionbar();
-
-//        binding.bottomNavigationView.setitemac
-
+        //Lấy database hiện tại
         database = FirebaseDatabase.getInstance();
+        //khởi tạo users
         users = new ArrayList<>();
+        //khởi tạo userAdapter
         usersAdapter = new UsersAdapter(this, users);
-//        binding.listChat.setLayoutManager(new LinearLayoutManager(this));
+        //setAdapter lại cho listChat
         binding.listChat.setAdapter(usersAdapter);
+        //theo dõi thay đổi của hàm users
         database.getReference().child("users").addValueEventListener(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //clear user
                 users.clear();
+                //nếu trùng với id của chính mình thì ko hiện profile
                 for(DataSnapshot snapshot1: snapshot.getChildren()){
                     User user = snapshot1.getValue(User.class);
                     if(!user.getUserid().equals(FirebaseAuth.getInstance().getUid()))
@@ -97,25 +102,32 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //Hàm on Resume
     @Override
     protected void onResume() {
         super.onResume();
+        //lấy current Uid
         String currentId = FirebaseAuth.getInstance().getUid();
+        //khi current Uid sửu dụng app thì set value cho currentId là online
         database.getReference().child("presence").child(currentId).setValue("Online");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        //lấy current Uid
         String currentId = FirebaseAuth.getInstance().getUid();
+        //khi current Uid không dụng app thì set value cho currentId là offline
         database.getReference().child("presence").child(currentId).setValue("Offline");
     }
 
+    //Hàm hiển thị navigationTop
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.navigationtop,menu);
         return super.onCreateOptionsMenu(menu);
     }
+    //Hàm đổi màu action bar
     public void changeBackgroundAcionbar(){
         ActionBar actionBar;
         actionBar = getSupportActionBar();
@@ -124,18 +136,25 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setBackgroundDrawable(colorDrawable);
     }
 
+    //Hàm chọn item trong menu
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
+        //khi id chọn là addfriend thì vào contactActivity
         if(id == R.id.addfriend){
             startActivity(new Intent(MainActivity.this, ContactActivity.class));
             return true;
-        }else if (id==R.id.userprofile){
+        }
+        //khi id chọn là userprofile thì vào UserProfileActivity
+        else if (id==R.id.userprofile){
             startActivity(new Intent(MainActivity.this, UserProfileActivity.class));
             return true;
-        }else if (id==R.id.logout){
+        }
+        //khi id chọn là logout thì trả về StartActivity
+        else if (id==R.id.logout){
             Map<String,Object> map = new HashMap<>();
             auth=FirebaseAuth.getInstance();
+            //set lại hàm users với hàm sign out
             FirebaseDatabase.getInstance()
                     .getReference("users")
                     .child(auth.getUid())
@@ -143,8 +162,7 @@ public class MainActivity extends AppCompatActivity {
                         FirebaseAuth.getInstance().signOut();
                         startActivity(new Intent(MainActivity.this, StartActivity.class));
                         finish();
-                    }));
-//            FirebaseAuth.getInstance().signOut();
+                    }));;
 
         }
         return super.onOptionsItemSelected(item);
