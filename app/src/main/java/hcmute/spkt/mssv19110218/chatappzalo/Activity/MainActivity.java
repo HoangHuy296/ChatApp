@@ -40,11 +40,11 @@ import hcmute.spkt.mssv19110218.chatappzalo.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    ActivityMainBinding binding;
-    FirebaseDatabase database;
-    ArrayList<User> users;
-    UsersAdapter usersAdapter;
-    FirebaseAuth auth;
+    ActivityMainBinding binding; //Dùng để binding các view trong MainnActivity
+    FirebaseDatabase database; //FirebaseDatabase được gán trong database
+    ArrayList<User> users; //Khởi tạo Arraylist user
+    UsersAdapter usersAdapter; //Khởi tạo userAdapter
+    FirebaseAuth auth; //FirebaseAuth được gán trong auth
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

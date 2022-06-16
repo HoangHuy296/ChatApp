@@ -59,35 +59,6 @@ public class OTPCheckActivity extends AppCompatActivity {
         String phoneNumber = getIntent().getStringExtra("phoneNumber");
 
         binding.phoneNumberRetext.setText(phoneNumber);
-
-//        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(auth)
-//                .setPhoneNumber(phoneNumber)
-//                .setTimeout(60L, TimeUnit.SECONDS)
-//                .setActivity(OTPCheckActivity.this)
-//                .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks(){
-//
-//                    @Override
-//                    public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onVerificationFailed(@NonNull FirebaseException e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onCodeSent(@NonNull String verifyID, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-//                        super.onCodeSent(verifyID, forceResendingToken);
-//                        dialog.dismiss();
-////                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-////                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
-//                        otpView.requestFocus();
-//                        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationID, verifyID);
-//                        verificationID = verifyID;
-//                    }
-//                }).build();
-//        PhoneAuthProvider.verifyPhoneNumber(options);
         sendVerificationCodeToUser(phoneNumber);
         onComplete();
     }

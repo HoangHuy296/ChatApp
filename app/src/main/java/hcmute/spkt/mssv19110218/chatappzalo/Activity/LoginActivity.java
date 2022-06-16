@@ -30,12 +30,12 @@ import hcmute.spkt.mssv19110218.chatappzalo.databinding.ActivityLoginBinding;
 public class LoginActivity extends AppCompatActivity {
 
     //khai báo biến sử dụng
-    ActivityLoginBinding binding;
-    ProgressDialog dialog;
-    FirebaseAuth auth;
-    ArrayList<User> users;
-    FirebaseDatabase database;
-    UsersAdapter usersAdapter;
+    ActivityLoginBinding binding; //Dùng để binding các view trong LoginActivity
+    ProgressDialog dialog; //Khởi tạo dialog
+    FirebaseAuth auth; //FirebaseAuth được gán trong auth
+    ArrayList<User> users; //Khởi tạo ArrayList User
+    FirebaseDatabase database; //FirebaseDatabase được gán trong database
+    UsersAdapter usersAdapter; //Khởi tạo userAdapter
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,21 +43,25 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        auth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
+        auth = FirebaseAuth.getInstance(); //Lấy FirebaseAuth hiện tại
+        database = FirebaseDatabase.getInstance(); //Lấy FirebaseDatabase hiện tại
 
         //Hiện dialog process
         dialog = new ProgressDialog(this);
         dialog.setTitle("Login");
         dialog.setMessage("Đang đăng nhập....");
         dialog.setCancelable(false);
+        //khởi tạo new user bằng arrayList
         users = new ArrayList<>();
+        //Khởi tạo userAdapter
         usersAdapter = new UsersAdapter(this, users);
         btnContinue();
     }
 
+    //Hàm để set sự kiện onClick cho btnContinue
     public void btnContinue(){
         binding.continueBtnLogin.setOnClickListener(new View.OnClickListener() {
+            //Khi click btnContinue sẽ truy cập hàm Login
             @Override
             public void onClick(View view) {
                 login();
