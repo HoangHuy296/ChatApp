@@ -1,7 +1,7 @@
 package hcmute.spkt.mssv19110218.chatappzalo.Models;
 
 public class User {
-    private String userid, name, phoneNumber, avatar, token, password;
+    private String userid, name, phoneNumber, avatar, token, password; //khởi tạo lớp user có những thuộc tính trên
 
     public User() {
         
@@ -15,6 +15,7 @@ public class User {
         this.password = password;
     }
 
+    //các hàm getter và setter tạo ra
     public String getUserid() {
         return userid;
     }
