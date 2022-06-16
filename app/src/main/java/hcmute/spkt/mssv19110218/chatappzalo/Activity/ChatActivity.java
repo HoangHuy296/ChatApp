@@ -497,13 +497,17 @@ public class ChatActivity extends AppCompatActivity {
             //get API của notificatioon vào url
             String url = "https://fcm.googleapis.com/fcm/send";
 
+            //Lớp này có thể ép buộc các giá trị sang một kiểu khác khi được yêu cầu.
             JSONObject data = new JSONObject();
+            //put thêm tittle và body của message notification
             data.put("title", name);
             data.put("body", message);
             JSONObject notificationData = new JSONObject();
+            //thêm data và token của người nhận
             notificationData.put("notification", data);
             notificationData.put("to", token);
 
+            //JsonObjectRequest gửi notification cho 1 URL nhất định
             JsonObjectRequest request = new JsonObjectRequest(url, notificationData, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -515,17 +519,19 @@ public class ChatActivity extends AppCompatActivity {
                     Toast.makeText(ChatActivity.this, error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 }
             }) {
+                //Thêm map key ở Firebase để sử dụng app gửi noti
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     HashMap<String, String> map = new HashMap<>();
                     String key = "Key=AAAARnZaHzg:APA91bGHYY-gOuh4JzDv641jRHPQ_nlACvhWeKjO44Vixgj2-U5yHk1_x5bEXWwl-22UKQQ-vb1a3qgKHD41DN33UjYl2Fhq0z3etRvq-0avV_N0dfglkGgWecNXluzNfabAmk9qXdNr";
                     map.put("Content-Type", "application/json");
+                    //Chứng thực bằng key được cấp ở firebase
                     map.put("Authorization", key);
 
                     return map;
                 }
             };
-
+            //Thêm Yêu cầu vào hàng đợi gửi.
             queue.add(request);
 
         } catch (Exception ex) {
@@ -533,34 +539,50 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    //hàm để gửi hình ảnh
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //requestCode = 25 để gửi hình ảnhq
         if (requestCode == 25) {
             if (data != null) {
                 if (data.getData() != null) {
+                    //khởi tạo uri bằng getdata của Image
                     Uri selectedImage = data.getData();
+                    //khởi tạo calender để lấy timeLastMsg
                     Calendar calendar = Calendar.getInstance();
+                    //StorageReference để lưu hình ảnh bằng storage
                     StorageReference reference = storage.getReference().child("chats").child(calendar.getTimeInMillis() + "");
+                    //Hiển thị dialog
                     dialog.show();
+                    //put file lên storage của firebase
                     reference.putFile(selectedImage).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                            //Đóng dialog
                             dialog.dismiss();
+                            //Truy xuất không đồng bộ URL tải xuống tồn tại lâu dài với mã thông báo có thể thu hồi.
+                            //Phải có quyền truy cập firebase để xem được file với hàm getDownloadUrl()
                             if (task.isSuccessful()) {
                                 reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
+                                        //khơi tạo filepath bằng uri.toString
                                         String filePath = uri.toString();
-
+                                        //gán messageTxt bằng image để get LastMsg của phôto
                                         String messageTxt = "image";
-
+                                        //Khởi tạo Date để lấy lastMsgTime
                                         Date date = new Date();
+                                        //Lưu vào message model với messagetxt, senderUid và lastMsgTime
                                         Message message = new Message(messageTxt, senderUid, date.getTime());
+                                        //set message lại là [photo]
+                                        //gán như vậy để tránh việc người dùng chỉ nhập photo sẽ hiện ra xml của hình ảnh rỗng
                                         message.setMessage("[photo]");
+                                        //set imageUrl là filePath đã khai báo
                                         message.setImageUrl(filePath);
+                                        //set msgToSend bằng rỗng
                                         binding.msgToSend.setText("");
-
+                                        //Tương tự cách lấy lastMsg của voice
                                         HashMap<String, Object> lastMsgObj = new HashMap<>();
                                         lastMsgObj.put("lastMsg", message.getMessage());
                                         lastMsgObj.put("lastMsgTime", date.getTime());
@@ -599,6 +621,7 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    //Hàm để xác định khi người dùng sử dụng app sẽ set presence thành online và lưu vào status
     @Override
     protected void onResume() {
         super.onResume();
@@ -606,11 +629,13 @@ public class ChatActivity extends AppCompatActivity {
         database.getReference().child("presence").child(currentId).setValue("Online");
     }
 
+    //hàm bấm nào nút trở về sẽ out
     public boolean onSupportNavigateUp() {
         finish();
         return super.onSupportNavigateUp();
     }
 
+    //Hàm đổi màu action bar
     public void changeBackgroundAcionbar() {
         ActionBar actionBar;
         actionBar = getSupportActionBar();
@@ -619,14 +644,10 @@ public class ChatActivity extends AppCompatActivity {
         actionBar.setBackgroundDrawable(colorDrawable);
     }
 
+    //Nút call ở bên góc phải của action bar
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.callnavigation, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
-//    public void hideKeyboard(){
-//        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-//        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-//    }
 }
 
