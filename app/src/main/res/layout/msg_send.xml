@@ -18,9 +18,35 @@
             android:layout_width="250dp"
             android:layout_height="160dp"
             android:layout_margin="5dp"
+            android:padding="6dp"
             android:scaleType="centerCrop"
             android:src="@drawable/avatar"
-            android:padding="6dp"/>
+            android:visibility="gone" />
+
+        <me.jagar.chatvoiceplayerlibrary.VoicePlayerView
+            android:id="@+id/voicePlayerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:enableVisualizer="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:playPauseBackgroundColor="@color/dark_blue"
+            app:playPauseCornerRadius="100"
+            app:playProgressbarColor="@color/blue_light"
+            app:progressTimeColor="#000"
+            app:seekBarProgressColor="#000"
+            app:seekBarThumbColor="@color/blue_light"
+            app:shareBackgroundColor="@color/dark_blue"
+            app:shareCornerRadius="100"
+            app:shareText="SHARE ME"
+            app:showShareButton="false"
+            app:showTiming="true"
+            app:timingBackgroundColor="@color/blue_light"
+            app:viewBackground="#C6C4CF"
+            app:viewCornerRadius="100"
+            app:visualizationNotPlayedColor="#727171"
+            app:visualizationPlayedColor="#ff7700" />
 
         <TextView
             android:id="@+id/msgSend"
@@ -32,6 +58,7 @@
             android:paddingEnd="8dp"
             android:text="@string/message"
             android:textSize="18sp"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

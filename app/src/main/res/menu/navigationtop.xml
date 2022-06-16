@@ -28,6 +28,16 @@
                 android:icon="@drawable/creategroup"
                 android:title="@string/create_group"
                 app:showAsAction="never" />
+            <item
+                android:id="@+id/userprofile"
+                android:icon="@drawable/userprofile"
+                android:title="@string/userprofile"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/logout"
+                android:icon="@drawable/logout"
+                android:title="@string/logout"
+                app:showAsAction="never" />
         </menu>
     </item>
 </menu>

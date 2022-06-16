@@ -61,33 +61,39 @@ public class MessageAdapter extends RecyclerView.Adapter {
         if (holder.getClass() == SendViewHolder.class){
             SendViewHolder viewHolder = (SendViewHolder)holder;
 
-            if(message.getMessage().equals("photo")) {
+            if(message.getMessage().equals("[photo]")) {
                 viewHolder.binding.image.setVisibility(View.VISIBLE);
                 viewHolder.binding.msgSend.setVisibility(View.GONE);
+                viewHolder.binding.voicePlayerView.setVisibility(View.GONE);
                 Glide.with(context)
                         .load(message.getImageUrl())
                         .placeholder(R.drawable.placeholder)
                         .into(viewHolder.binding.image);
-            } else if(!message.getMessage().equals("photo")) {
-                viewHolder.binding.msgSend.setText(message.getMessage());
+            } else if (message.getMessage().equals("[voice*]")) {
                 viewHolder.binding.image.setVisibility(View.GONE);
-                viewHolder.binding.msgSend.setVisibility(View.VISIBLE);
+                viewHolder.binding.msgSend.setVisibility(View.GONE);
+                viewHolder.binding.voicePlayerView.setVisibility(View.VISIBLE);
+                viewHolder.binding.voicePlayerView.setAudio(message.getVoiceUrl());
             }
+            viewHolder.binding.msgSend.setText(message.getMessage());
         } else {
             ReceiveViewHolder viewHolder = (ReceiveViewHolder) holder;
 
-            if(message.getMessage().equals("photo")){
+            if(message.getMessage().equals("[photo]")){
                 viewHolder.binding.image.setVisibility(View.VISIBLE);
                 viewHolder.binding.msgReceive.setVisibility(View.GONE);
+                viewHolder.binding.voicePlayerView.setVisibility(View.GONE);
                 Glide.with(context)
                         .load(message.getImageUrl())
                         .placeholder(R.drawable.placeholder)
                         .into(viewHolder.binding.image);
-            } else if (!message.getMessage().equals("photo")) {
-                viewHolder.binding.msgReceive.setText(message.getMessage());
+            } else if (message.getMessage().equals("[voice*]")) {
                 viewHolder.binding.image.setVisibility(View.GONE);
-                viewHolder.binding.msgReceive.setVisibility(View.VISIBLE);
+                viewHolder.binding.msgReceive.setVisibility(View.GONE);
+                viewHolder.binding.voicePlayerView.setVisibility(View.VISIBLE);
+                viewHolder.binding.voicePlayerView.setAudio(message.getVoiceUrl());
             }
+            viewHolder.binding.msgReceive.setText(message.getMessage());
         }
     }
 
