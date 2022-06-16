@@ -4,20 +4,31 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.annotation.SuppressLint;
+import android.media.MediaRecorder;
+
+import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +39,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.devlomi.record_view.OnRecordListener;
+import com.devlomi.record_view.RecordButton;
+import com.devlomi.record_view.RecordPermissionHandler;
+import com.devlomi.record_view.RecordView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -42,83 +57,115 @@ import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import hcmute.spkt.mssv19110218.chatappzalo.Adapters.MessageAdapter;
+import hcmute.spkt.mssv19110218.chatappzalo.Controller.AudioRecorder;
 import hcmute.spkt.mssv19110218.chatappzalo.Models.Message;
+import hcmute.spkt.mssv19110218.chatappzalo.Permission.Permissions;
 import hcmute.spkt.mssv19110218.chatappzalo.R;
 import hcmute.spkt.mssv19110218.chatappzalo.databinding.ActivityChatBinding;
-
 public class ChatActivity extends AppCompatActivity {
 
-    ActivityChatBinding binding;
-    MessageAdapter adapter;
-    ArrayList<Message> messages;
+    ActivityChatBinding binding; //Dùng để binding các view trong ChatActivity
+    MessageAdapter adapter; //Gán MessageAdapter vào biến adapter
+    ArrayList<Message> messages; //Gán model Message vào biến messages
 
-    String senderRoom, receiverRoom;
-    FirebaseDatabase database;
-    FirebaseStorage storage;
+    String senderRoom, receiverRoom; //Phòng của người gửi và người nhận
+    FirebaseDatabase database; //Firebasedatabase được gán trong database
+    FirebaseStorage storage; //FirebaseStorage được gán trong storafe
 
-    ProgressDialog dialog;
-    String senderUid;
-    String receiverUid;
-    String name;
-    String profile;
-    String token;
+    ProgressDialog dialog; //dialog của activity
+    String senderUid; //Uid của người gửi
+    String receiverUid; //Uid của người nhận
+    String name; //Tên của user
+    String profile; //Chuỗi string của image
+    String token; //Tạo biến token để lưu token của người dùng
+    String uid; //Uid của user
+    String mFileName = null; //file name của record
 
+    private StorageReference mStorage; //Khởi tạo storage
+    private AudioRecorder audioRecord; //khởi tạo audiorecord
+    private File recordFile; //khởi tạo recordfile
+
+
+    //Hàm oncreate để tạo các view cho ChatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //@param inflater dùng để map các view vào ChatActivity
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        //thay thế thanh actionbar bằng toolbar trong xml
         setSupportActionBar(binding.toolbar);
 
-        database = FirebaseDatabase.getInstance();
-        storage = FirebaseStorage.getInstance();
+        database = FirebaseDatabase.getInstance(); //Lấy FirebaseDatabase hiện tại
+        storage = FirebaseStorage.getInstance(); //Lấy FirebaseStorage hiện tại
+        mStorage = FirebaseStorage.getInstance().getReference(); //được khởi tạo tại vị trí lưu trữ Firebase gốc
+        mFileName = Environment.getExternalStorageDirectory().getAbsolutePath(); //trả lại đường dẫn tuyệt đối của file
+        mFileName += "/recorded_audio.3gp"; //thêm đuôi của file name
 
-        messages = new ArrayList<>();
-        adapter = new MessageAdapter(this, messages);
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        binding.recyclerView.setAdapter(adapter);
+        //progress dialog của Upload Image
+        dialog = new ProgressDialog(this);
+        dialog.setMessage("Uploading image...");
+        dialog.setCancelable(false);
+        audioRecord = new AudioRecorder(); //khởi tạo audioRecord bằng new Controller của AudioRecorder
 
-        profile = getIntent().getStringExtra("image");
-        name = getIntent().getStringExtra("name");
-        token = getIntent().getStringExtra("token");
+        messages = new ArrayList<>(); //khởi tạo new arraylist cho message
+        adapter = new MessageAdapter(this, messages); //khởi tạo messageAdapter cho activity
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this)); //set lại layoutManager với recyclerView
+        binding.recyclerView.setAdapter(adapter); //Set adapter cho recyclerView bằng MessageAdapter đã khai báo ở trên
+
+        profile = getIntent().getStringExtra("image"); //nhận chuỗi image từ intent trước gán vào profile
+        name = getIntent().getStringExtra("name"); //nhận chuỗi name từ intent trước gán vào name
+        uid = getIntent().getStringExtra("uid"); //nhận chuỗi uid từ intent trước gán vào uid
+        token = getIntent().getStringExtra("token"); //nhận token từ intent trước gán vào token
         //Toast.makeText(this,token, Toast.LENGTH_SHORT).show();
 
-        binding.name.setText(name);
-        Glide.with(ChatActivity.this)
-                .load(profile)
-                .placeholder(R.drawable.avatar)
-                .into(binding.image);
+        binding.name.setText(name); //set Text của textview Name với name đã nhận ở trên
+        Glide.with(ChatActivity.this)//Một singleton để trình bày một giao diện tĩnh đơn giản để xây dựng các yêu cầu với RequestBuilder và duy trì Engine, BitmapPool, DiskCache và MemoryCache.
+                .load(profile) //Tương đương với việc gọi asDrawable () và sau đó là RequestBuilder.load (String).
+                .placeholder(R.drawable.avatar) //hiển thị trong khi tài nguyên đang tải thay thế mọi lệnh gọi trước đó đến phương thức với id là avatar
+                .into(binding.image); //Đặt ImageView là nơi sẽ được tải vào bằng cách binding đến image trong view, hủy mọi tải hiện có vào chế độ xem và giải phóng mọi tài nguyên mà Glide có thể đã tải trước đó vào chế độ xem để chúng có thể được sử dụng lại.
 
+        //đặt sự kiện click cho button back
         binding.back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
-            }
+            } //kết thúc
         });
 
-        receiverUid = getIntent().getStringExtra("uid");
-        senderUid = FirebaseAuth.getInstance().getUid();
+        receiverUid = getIntent().getStringExtra("uid"); //lấy reveicerUid đưa vào uid
+        senderUid = FirebaseAuth.getInstance().getUid(); //getUid từ FirebaseAuth gán vào senderUid
 
+        //Nhận tham chiếu đến locate liên quan đến vị trí này thêm hàm addValueEventListener để theo dõi thay đổi đến locate này
         database.getReference().child("presence").child(receiverUid).addValueEventListener(new ValueEventListener() {
+            //Bản sao DataSnapshot chứa dữ liệu từ vị trí Cơ sở dữ liệu Firebase. Bất kỳ lúc nào bạn đọc dữ liệu Cơ sở dữ liệu, sẽ nhận được dữ liệu dưới dạng Ảnh chụp dữ liệu.
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+                    //truyền dữ liệu vào snapshot và lưu vào biến status với hàm getValue hàm String, ràng buộc cần xác định các getters công khai
                     String status = snapshot.getValue(String.class);
-                    assert status != null;
+                    assert status != null; //kiếm tra biến truyền vào của status
                     if (!status.isEmpty()) {
+                        //nếu status rỗng thì set status là offline
                         if (status.equals("Offline")) {
+                            //ẩn status đi
                             binding.status.setVisibility(View.GONE);
                         } else {
+                            //nếu status không rỗng thì set status là status
                             binding.status.setText(status);
-                            binding.status.setVisibility(View.VISIBLE);
+                            binding.status.setVisibility(View.VISIBLE); //hiện thanh status
                         }
                     }
                 }
@@ -130,24 +177,32 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        senderRoom = senderUid + receiverUid;
-        receiverRoom = receiverUid + senderUid;
+        senderRoom = senderUid + receiverUid; //senderRoom bằng chuỗi string của senderUid và ReceiverUid
+        receiverRoom = receiverUid + senderUid; //ReceiverRoom bằng chuỗi string của ReceiverUid và senderUid
 
+        //set dialog của sending image
         dialog = new ProgressDialog(this);
         dialog.setMessage("Đang tải hình ảnh...");
         dialog.setCancelable(false);
 
+        //tham chiếu đến vị trí chat trong database
         database.getReference().child("chats")
                 .child(senderRoom)
                 .child("messages")
+                //thêm hàm addValueEventListener để theo dõi thay đổi
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        //clear messages cho data
                         messages.clear();
                         for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                            //gán message lại bằng cách getValue và truyền vào Message
                             Message message = snapshot1.getValue(Message.class);
+                            //add message vào messages
                             messages.add(message);
                         }
+                        //Thông báo cho bất kỳ quan sát viên đã đăng ký nào rằng tập dữ liệu đã thay đổi.
+                        //Có hai lớp khác nhau về các sự kiện thay đổi dữ liệu, thay đổi mục và thay đổi cấu trúc.
                         adapter.notifyDataSetChanged();
                     }
 
@@ -157,19 +212,26 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 });
 
+        //Theo dõi textchange của msgToSend để bắt sự kiện
         binding.msgToSend.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
 
+            //khi textchange thay đổi
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                //kiểm tra nếu msgToSend rỗng
                 if (binding.msgToSend.getText().toString().isEmpty()) {
+                    //ẩn nút btnSend
                     binding.btnsend.setVisibility(View.GONE);
+                    //hiện nút btnPhoto
                     binding.btnphoto.setVisibility(View.VISIBLE);
                 } else {
+                    //hiện nút btnsend
                     binding.btnsend.setVisibility(View.VISIBLE);
+                    //ẩn nút btnphoto
                     binding.btnphoto.setVisibility(View.GONE);
                 }
             }
@@ -180,22 +242,32 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        //set sự kiện hàm onclick cho nút btnsend
         binding.btnsend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //lấy dữ liệu từ khung msgToSend
                 String messageTxt = binding.msgToSend.getText().toString();
 
+                //Lấy dữ liệu date
                 Date date = new Date();
+                //lưu vào message model với msgToSend, senderUid và Date
                 Message message = new Message(messageTxt, senderUid, date.getTime());
+                //setText lại cho msgToSend bằng rỗng khi đã gửi
                 binding.msgToSend.setText("");
 
+                //Hashmap Object để lấy lastMsg
                 HashMap<String, Object> lastMsgObj = new HashMap<>();
+                //put message vào lastMsg
                 lastMsgObj.put("lastMsg", message.getMessage());
+                //put dateTime vào LastMsgTime
                 lastMsgObj.put("lastMsgTime", date.getTime());
 
+                //lưu Hashmap lastMsg lastMsgTime vào child của chats
                 database.getReference().child("chats").child(senderRoom).updateChildren(lastMsgObj);
                 database.getReference().child("chats").child(receiverRoom).updateChildren(lastMsgObj);
 
+                //Tương tự hàm ở receiverRoom
                 database.getReference().child("chats")
                         .child(senderRoom)
                         .child("messages")
@@ -208,6 +280,7 @@ public class ChatActivity extends AppCompatActivity {
                                 .child("messages")
                                 .push()
                                 .setValue(message).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            //Khi success sẽ gửi notification về điện thoại bằng token của user
                             @Override
                             public void onSuccess(Void unused) {
                                 sendNotification(name, message.getMessage(), token);
@@ -218,17 +291,23 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        //set sự kiện onClick cho btnPhoto
         binding.btnphoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //mở intent mới
                 Intent intent = new Intent();
+                //permission đã set để vào photo
                 intent.setAction(Intent.ACTION_GET_CONTENT);
+                //setype cho intent
                 intent.setType("image/*");
                 startActivityForResult(intent, 25);
             }
         });
 
+        //Một handler cho phép xử lí các đối tượng của message và Runnable được liên kết với MessageQueue
         final Handler handler = new Handler();
+        //theo dõi msgToSend trong handler
         binding.msgToSend.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -240,14 +319,19 @@ public class ChatActivity extends AppCompatActivity {
 
             }
 
+            //Hàm sau khi nhập msgToSend
             @Override
             public void afterTextChanged(Editable s) {
+                //sau khi nhập thì setValue của presence trong status bằng Đang Nhập ....
                 database.getReference().child("presence").child(senderUid).setValue("Đang nhập...");
+                //Xóa mọi trạng thái và tin nhắn đã gửi có đối tượng là mã thông báo. Nếu mã thông báo rỗng, tất cả các lệnh gọi lại và tin nhắn sẽ bị xóa.
                 handler.removeCallbacksAndMessages(null);
+                //setdelaytime
                 handler.postDelayed(userStoppedTyping, 1000);
             }
-
+            //khi user ngừng type
             Runnable userStoppedTyping = new Runnable() {
+                //set lại status của sender là online
                 @Override
                 public void run() {
                     database.getReference().child("presence").child(senderUid).setValue("Online");
@@ -255,15 +339,162 @@ public class ChatActivity extends AppCompatActivity {
             };
         });
 
-        changeBackgroundAcionbar();
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        //setRecordView cho btnVoice
+        binding.btnvoice.setRecordView(binding.recordView);
+        //set hàm ít hơn 1s cho RecordView
+        binding.recordView.setLessThanSecondAllowed(false);
+        //set sự kiện record cho recordView
+        binding.recordView.setOnRecordListener(new OnRecordListener() {
+            //khi bắt đầu
+            @Override
+            public void onStart() {
+                //Start Recording..
+                Log.d("RecordView", "onStart");
+                //gán recordFile bằng chuỗi path và gán vào child
+                recordFile = new File(getFilesDir(), UUID.randomUUID().toString() + ".3gp");
+                try {
+                    //gàn chuỗi path vào RecordFile và chạy audioRecord
+                    audioRecord.start(recordFile.getPath());
+                } catch (IOException e) {
+                    //báo throwable cho luồng
+                    e.printStackTrace();
+                }
+//                Toast.makeText(ChatActivity.this, "OnStartRecord", Toast.LENGTH_SHORT).show();
+                //khi bật record thì ẩn và hiện các button và view
+                binding.msgToSend.setVisibility(View.GONE); //ẩn msgToSend
+                binding.msgToSend.setText(""); //setText msgToSend bằng rỗng
+                binding.btnphoto.setVisibility(View.GONE); //ẩn nút btnPhoto
+            }
+
+            //hàm oncancel khi ko muốn gửi recordFile
+            @Override
+            public void onCancel() {
+                //On Swipe To Cancel
+                stopRecording(true);
+                Log.d("RecordView", "onCancel");
+                //hiện msgToSend
+                binding.msgToSend.setVisibility(View.VISIBLE);
+                //Hiện btnPhoto
+                binding.btnphoto.setVisibility(View.VISIBLE);
+            }
+
+            //Hàm onFinish của record
+            @Override
+            public void onFinish(long recordTime, boolean limitReached) {
+                //Stop Recording..
+                //limitReached to determine if the Record was finished when time limit reached.
+                //String time = getHumanTimeText(recordTime);
+                Log.d("RecordView", "onFinish");
+                //set false của StopRecord
+                stopRecording(false);
+                //gán chuỗi time để lấy lastMsg
+                String time = getHumanTimeText(recordTime);
+                //hiện msgToSend
+                binding.msgToSend.setVisibility(View.VISIBLE);
+                //Hiện btnPhoto
+                binding.btnphoto.setVisibility(View.VISIBLE);
+                //Up file record
+                uploadRecord();
+                //Log.d("RecordTime", time);
+            }
+
+            //Hàm ít hơn 1s
+            @Override
+            public void onLessThanSecond() {
+                //When the record time is less than One Second
+                Log.d("RecordView", "onLessThanSecond");
+                //Hiện msgToSend
+                binding.msgToSend.setVisibility(View.VISIBLE);
+                //Hiện btnPhoto
+                binding.btnphoto.setVisibility(View.VISIBLE);
+            }
+        });
+        changeBackgroundAcionbar(); //thay đổi background của ActionBar
+        getSupportActionBar().setDisplayShowTitleEnabled(false); //Tắt tittle của ActionBar
 //        getSupportActionBar().setTitle(name);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    //hàm dừng record
+    private void stopRecording(boolean deleteFile) {
+        //Khi dừng audioRecord
+        audioRecord.stop();
+        //Nếu khi dừng mà file record rỗng thì xóa file
+        if (recordFile != null && deleteFile) {
+            recordFile.delete();
+        }
+    }
+
+    //Hàm lấy thời gian của LastMsg
+    @SuppressLint("DefaultLocale")
+    private String getHumanTimeText(long milliseconds) {
+        //chỉnh format của chuỗi Strings
+        return String.format("%02d:%02d",
+                TimeUnit.MILLISECONDS.toMinutes(milliseconds),
+                TimeUnit.MILLISECONDS.toSeconds(milliseconds) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliseconds)));
+    }
+
+    //Hàm uploadRecord
+    private void uploadRecord() {
+        //Lấy path Uri
+        Uri selectedVoice = Uri.fromFile(new File(recordFile.getPath()));
+        //lưu file audio với path vừa rồi vào child của audio và lưu thêm đuôi .3gp
+        StorageReference reference = mStorage.child("Audio").child(UUID.randomUUID().toString() + ".3gp");
+
+        //dialog khi gửi record
+        dialog.setMessage("Upload voice...");
+        dialog.show();
+        //Khi complete ẩn dialog
+        reference.putFile(selectedVoice).addOnCompleteListener(task -> {
+            dialog.dismiss();
+            //Nếu task thành công
+            if (task.isSuccessful()) {
+                //Truy xuất không đồng bộ URL tải xuống tồn tại lâu dài với mã thông báo có thể thu hồi.
+                //Phải có quyền truy cập firebase để xem được file với hàm getDownloadUrl()
+                reference.getDownloadUrl().addOnSuccessListener(uri -> {
+                    //gắn chuỗi uri vào chuỗi filepath
+                    String filePath = uri.toString();
+                    //set messageTxt = [voice]
+                    String messageTxt = "[voice]";
+                    //khởi tạo hàm date
+                    Date date = new Date();
+                    //lưu message vào message data
+                    Message message = new Message(messageTxt, senderUid, date.getTime());
+                    //đưa hashmap để lấy lastMsg
+                    HashMap<String, Object> lastMsgObj = new HashMap<>();
+
+                    //put lastMsg vào database
+                    lastMsgObj.put("lastMsg", message.getMessage());
+                    lastMsgObj.put("lastMsgTime", date.getTime());
+
+                    database.getReference().child("chats").child(senderRoom).updateChildren(lastMsgObj);
+                    database.getReference().child("chats").child(receiverRoom).updateChildren(lastMsgObj);
+
+                    message.setMessage("[voice*]");
+                    message.setVoiceUrl(filePath);
+                    binding.msgToSend.setText("");
+                    database.getReference().child("chats")
+                            .child(senderRoom)
+                            .child("messages")
+                            .push()
+                            .setValue(message).addOnSuccessListener(avoid -> database.getReference().child("chats")
+                            .child(receiverRoom)
+                            .child("messages")
+                            .push()
+                            .setValue(message).addOnSuccessListener(avoid1 -> {
+
+                            }));
+                });
+            }
+        });
+    }
+
+    //Hàm gửi thông báo
     void sendNotification(String name, String message, String token) {
         try {
+            //RequestQueue gửi yêu cầu đồng bộ
             RequestQueue queue = Volley.newRequestQueue(this);
+            //get API của notificatioon vào url
             String url = "https://fcm.googleapis.com/fcm/send";
 
             JSONObject data = new JSONObject();
@@ -322,11 +553,11 @@ public class ChatActivity extends AppCompatActivity {
                                     public void onSuccess(Uri uri) {
                                         String filePath = uri.toString();
 
-                                        String messageTxt = binding.msgToSend.getText().toString();
+                                        String messageTxt = "image";
 
                                         Date date = new Date();
                                         Message message = new Message(messageTxt, senderUid, date.getTime());
-                                        message.setMessage("photo");
+                                        message.setMessage("[photo]");
                                         message.setImageUrl(filePath);
                                         binding.msgToSend.setText("");
 
@@ -392,5 +623,10 @@ public class ChatActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.callnavigation, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
+//    public void hideKeyboard(){
+//        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+//        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+//    }
 }
 
