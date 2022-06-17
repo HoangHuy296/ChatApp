@@ -21,6 +21,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
+            android:name=".Activity.StartActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.UserProfileActivity"
             android:exported="false" />
         <activity
@@ -53,8 +56,9 @@
             android:exported="false"
             android:windowSoftInputMode="stateVisible" />
         <activity
-            android:name=".Activity.StartActivity"
-            android:exported="true">
+            android:name=".Activity.SpashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

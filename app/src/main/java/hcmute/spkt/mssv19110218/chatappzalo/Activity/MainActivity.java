@@ -154,16 +154,19 @@ public class MainActivity extends AppCompatActivity {
         else if (id==R.id.logout){
             Map<String,Object> map = new HashMap<>();
             auth=FirebaseAuth.getInstance();
-            //set lại hàm users với hàm sign out
-            FirebaseDatabase.getInstance()
-                    .getReference("users")
-                    .child(auth.getUid())
-                    .updateChildren(map,((error, ref) -> {
-                        FirebaseAuth.getInstance().signOut();
-                        startActivity(new Intent(MainActivity.this, StartActivity.class));
-                        finish();
-                    }));;
-
+            if(auth.getCurrentUser()!=null)
+            {
+                auth.signOut();
+                //set lại hàm users với hàm sign out
+                FirebaseDatabase.getInstance()
+                        .getReference("users")
+                        .child(auth.getUid())
+                        .updateChildren(map,((error, ref) -> {
+                            FirebaseAuth.getInstance().signOut();
+                            startActivity(new Intent(MainActivity.this, StartActivity.class));
+                            finish();
+                        }));
+            }
         }
         return super.onOptionsItemSelected(item);
     }

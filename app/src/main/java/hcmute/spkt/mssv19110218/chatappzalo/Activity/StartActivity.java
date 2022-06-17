@@ -25,7 +25,7 @@ public class StartActivity extends AppCompatActivity {
 
     //Bấm nút login để vào trang login
     public void login(View view) {
-        startActivity(new Intent(StartActivity.this,LoginActivity.class));
+        startActivity(new Intent(StartActivity.this, LoginActivity.class));
     }
 
     //Bấm nút đăng kí để vào trang đăng kí
