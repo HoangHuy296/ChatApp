@@ -33,4 +33,5 @@
     <string name="samplePhone">+84792122906</string>
     <string name="pass">Mật khẩu:</string>
     <string name="editpassword">password</string>
+    <string name="save">Save</string>
 </resources>

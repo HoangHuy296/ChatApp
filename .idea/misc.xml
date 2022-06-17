@@ -48,7 +48,9 @@
         <entry key="..\:/ChatAppZalo/app/src/main/res/menu/navigationbottom.xml" value="0.25416666666666665" />
         <entry key="..\:/ChatAppZalo/app/src/main/res/menu/navigationtop.xml" value="0.25416666666666665" />
         <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/drawable/custom_btn_add_contact.xml" value="0.1965" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/drawable/done.xml" value="0.1965" />
         <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/drawable/logout.xml" value="0.1965" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/drawable/notdone.xml" value="0.1965" />
         <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/drawable/userprofile.xml" value="0.124" />
         <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/activity_chat.xml" value="0.264" />
         <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/activity_contact.xml" value="0.25416666666666665" />

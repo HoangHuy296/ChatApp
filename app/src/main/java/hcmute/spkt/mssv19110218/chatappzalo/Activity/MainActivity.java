@@ -20,8 +20,10 @@ import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.annotations.NotNull;
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<User> users; //Khởi tạo Arraylist user
     UsersAdapter usersAdapter; //Khởi tạo userAdapter
     FirebaseAuth auth; //FirebaseAuth được gán trong auth
+    FirebaseUser user; //khai báo FireBaseUser
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         //Lấy database hiện tại
         database = FirebaseDatabase.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
         //sử dụng dịch vụ FirebaseMessaging
         FirebaseMessaging.getInstance()
                 //lấy token của user
@@ -152,23 +156,41 @@ public class MainActivity extends AppCompatActivity {
         }
         //khi id chọn là logout thì trả về StartActivity
         else if (id==R.id.logout){
-            Map<String,Object> map = new HashMap<>();
-            auth=FirebaseAuth.getInstance();
-            if(auth.getCurrentUser()!=null)
-            {
-                auth.signOut();
-                //set lại hàm users với hàm sign out
-                FirebaseDatabase.getInstance()
-                        .getReference("users")
-                        .child(auth.getUid())
-                        .updateChildren(map,((error, ref) -> {
-                            FirebaseAuth.getInstance().signOut();
-                            startActivity(new Intent(MainActivity.this, StartActivity.class));
-                            finish();
-                        }));
-            }
+            auth = FirebaseAuth.getInstance();
+            auth.signOut();
+            deleteUserPresence();
+            deleteUserToken();
+            signOutUser();
         }
         return super.onOptionsItemSelected(item);
     }
+    //hàm để xóa trạng thái user
+    private void deleteUserPresence() {
+        //lấy Uid của user
+        String uidCurrent = user.getUid();
+        //dẫn tời path của presence trong database
+        DatabaseReference reference = database.getReference("presence").child(uidCurrent);
+        //Xóa nó
+        reference.removeValue();
+    }
 
+    //hàm xóa token của user
+    private void deleteUserToken() {
+        //lấy Uid của user
+        String uidCurrent = user.getUid();
+        //dẫn tời path của users trong database
+        DatabaseReference reference = database.getReference("users").child(uidCurrent).child("token");
+        //xóa nó
+        reference.removeValue();
+    }
+
+    //hàm logout
+    private void signOutUser() {
+        //tạo intent để về startActivity
+        Intent intent = new Intent(MainActivity.this, StartActivity.class);
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
 }

@@ -97,6 +97,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editPassword"
+                android:inputType="textPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -107,6 +108,20 @@
                 app:layout_constraintStart_toEndOf="@+id/phone"
                 app:layout_constraintTop_toBottomOf="@+id/editPhone" />
 
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:text="@string/save"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editPassword"
+                android:background="@drawable/botron_button"
+                android:textColor="@color/white"
+                android:textStyle="bold">
+
+            </Button>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
