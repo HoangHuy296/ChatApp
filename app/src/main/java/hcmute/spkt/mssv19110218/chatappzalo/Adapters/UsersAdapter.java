@@ -12,14 +12,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 import hcmute.spkt.mssv19110218.chatappzalo.Activity.ChatActivity;
 import hcmute.spkt.mssv19110218.chatappzalo.R;
@@ -30,6 +33,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
 
     Context context; //Context chứa adapter
     ArrayList<User> users; //Khởi tạo danh sách user
+    String currentUserName;   //khởi tạo curent UserName
 
     public UsersAdapter(Context context, ArrayList<User> users) {
         this.context = context;
@@ -82,7 +86,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
 
                     }
                 });
-
+        currentUserName(); // gọi hàm để lấy current user
         //set text cho userName bằng user.getName() trong user Model
         holder.binding.userName.setText(user.getName());
         //tạo 1 singleton để trình bày một giao diện tĩnh đơn giản để xây dựng các yêu cầu với RequestBuilder
@@ -100,7 +104,29 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
                 intent.putExtra("image", user.getAvatar()); //lưu biến image bằng user.getAvatar()
                 intent.putExtra("uid", user.getUserid()); //lưu biến uid bằng user.getUserid()
                 intent.putExtra("token", user.getToken()); //lưu biến token bằng user.getToken()
+                intent.putExtra("currentUserName", currentUserName); //lưu biến token bằng curentUserName
                 context.startActivity(intent);
+            }
+        });
+    }
+
+    private void currentUserName(){
+        FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
+        String uidCurrent = Objects.requireNonNull(user1).getUid();
+        //Sử dụng databaseReference và gét giá trị đến đường dẫn trên firebase
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(uidCurrent);
+        //Sử dụng databaseReference để lắng nghe sự kiện thay đổi
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //Sử dụng model user để nhận giá trị từ realtime database
+                User user = snapshot.getValue(User.class);
+                //Lấy giá trị name của curent user và gán vào cUserName
+                currentUserName = Objects.requireNonNull(user).getName();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }

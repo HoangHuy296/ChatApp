@@ -90,6 +90,7 @@ public class ChatActivity extends AppCompatActivity {
     String profile; //Chuỗi string của image
     String token; //Tạo biến token để lưu token của người dùng
     String uid; //Uid của user
+    String currentUserName; //khởi tạo nameCurrentUser đang chat với người dùng
     String mFileName = null; //file name của record
 
     private StorageReference mStorage; //Khởi tạo storage
@@ -129,6 +130,7 @@ public class ChatActivity extends AppCompatActivity {
         name = getIntent().getStringExtra("name"); //nhận chuỗi name từ intent trước gán vào name
         uid = getIntent().getStringExtra("uid"); //nhận chuỗi uid từ intent trước gán vào uid
         token = getIntent().getStringExtra("token"); //nhận token từ intent trước gán vào token
+        currentUserName = getIntent().getStringExtra("currentUserName"); //nhận currentUserName từ intent trước gán vào currentUser
         //Toast.makeText(this,token, Toast.LENGTH_SHORT).show();
 
         binding.name.setText(name); //set Text của textview Name với name đã nhận ở trên
@@ -283,7 +285,7 @@ public class ChatActivity extends AppCompatActivity {
                             //Khi success sẽ gửi notification về điện thoại bằng token của user
                             @Override
                             public void onSuccess(Void unused) {
-                                sendNotification(name, message.getMessage(), token);
+                                sendNotification(currentUserName, message.getMessage(), token);
                             }
                         });
                     }
