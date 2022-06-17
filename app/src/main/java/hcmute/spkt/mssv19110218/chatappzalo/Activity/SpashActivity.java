@@ -15,7 +15,7 @@ import hcmute.spkt.mssv19110218.chatappzalo.R;
 
 public class SpashActivity extends AppCompatActivity {
 
-    FirebaseAuth auth;
+    FirebaseAuth auth; //khởi tạo firebaseAuth
     FirebaseUser user;
     android.os.Handler handler;
 
@@ -23,8 +23,10 @@ public class SpashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spash);
-        auth = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance(); //mapping firebaseAuth để lấy trạng thái
+        //delay 2000milis để chạy hàm
         new Handler().postDelayed(new Runnable() {
+            //nếu đã có user cho vào main
             @Override
             public void run() {
                 if(auth.getCurrentUser()!=null)
@@ -32,7 +34,9 @@ public class SpashActivity extends AppCompatActivity {
                     Intent intent = new Intent(SpashActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
-                } else {
+                }
+                //chưa có user cho vào StartActivity
+                else {
                     startActivity(new Intent(SpashActivity.this, StartActivity.class));
                     finish();
                 }
