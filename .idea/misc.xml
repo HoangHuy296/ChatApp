@@ -52,6 +52,8 @@
         <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/drawable/userprofile.xml" value="0.124" />
         <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/activity_chat.xml" value="0.264" />
         <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/activity_contact.xml" value="0.25416666666666665" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/activity_create_account.xml" value="0.25416666666666665" />
+        <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/activity_insert_phone.xml" value="0.25416666666666665" />
         <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/activity_login.xml" value="0.25416666666666665" />
         <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
         <entry key="..\:/Git_Repo/ChatApp/app/src/main/res/layout/activity_otpcheck.xml" value="0.25416666666666665" />

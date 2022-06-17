@@ -68,12 +68,16 @@ public class OTPCheckActivity extends AppCompatActivity {
     }
 
     public void callNextScreenFromOTP(View view) {
+        //lấy dữ liệu của otpView gán vào otp
         String otp = Objects.requireNonNull(otpView.getText()).toString();
+        //Nếu otp rỗng hoặc <6 thì
         if (otp.isEmpty() || otp.length() < 6) {
+            //báo lỗi và focus lại
             otpView.setError("Enter code...");
             otpView.requestFocus();
             return;
         }
+        //chạy hàm OTP nếu ko có lỗi trên
         verifyOTP(otp);
     }
 
