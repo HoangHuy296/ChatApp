@@ -115,10 +115,10 @@ public class ChatActivity extends AppCompatActivity {
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath(); //trả lại đường dẫn tuyệt đối của file
         mFileName += "/recorded_audio.3gp"; //thêm đuôi của file name
 
-        //progress dialog của Upload Image
-        dialog = new ProgressDialog(this);
-        dialog.setMessage("Uploading image...");
-        dialog.setCancelable(false);
+//        //progress dialog của Upload Image
+//        dialog = new ProgressDialog(this);
+//        dialog.setMessage("Uploading image...");
+//        dialog.setCancelable(false);
         audioRecord = new AudioRecorder(); //khởi tạo audioRecord bằng new Controller của AudioRecorder
 
         messages = new ArrayList<>(); //khởi tạo new arraylist cho message
@@ -444,7 +444,7 @@ public class ChatActivity extends AppCompatActivity {
         StorageReference reference = mStorage.child("Audio").child(UUID.randomUUID().toString() + ".3gp");
 
         //dialog khi gửi record
-        dialog.setMessage("Upload voice...");
+        dialog.setMessage("Đang tải âm thanh...");
         dialog.show();
         //Khi complete ẩn dialog
         reference.putFile(selectedVoice).addOnCompleteListener(task -> {
@@ -631,6 +631,14 @@ public class ChatActivity extends AppCompatActivity {
         database.getReference().child("presence").child(currentId).setValue("Online");
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //lấy current Uid
+        String currentId = FirebaseAuth.getInstance().getUid();
+        //khi current Uid không dụng app thì set value cho currentId là offline
+        database.getReference().child("presence").child(currentId).setValue("Offline");
+    }
     //hàm bấm nào nút trở về sẽ out
     public boolean onSupportNavigateUp() {
         finish();

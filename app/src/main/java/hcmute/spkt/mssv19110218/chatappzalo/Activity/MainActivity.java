@@ -116,15 +116,6 @@ public class MainActivity extends AppCompatActivity {
         database.getReference().child("presence").child(currentId).setValue("Online");
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //lấy current Uid
-        String currentId = FirebaseAuth.getInstance().getUid();
-        //khi current Uid không dụng app thì set value cho currentId là offline
-        database.getReference().child("presence").child(currentId).setValue("Offline");
-    }
-
     //Hàm hiển thị navigationTop
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -188,8 +179,9 @@ public class MainActivity extends AppCompatActivity {
     private void signOutUser() {
         //tạo intent để về startActivity
         Intent intent = new Intent(MainActivity.this, StartActivity.class);
-
+        //gán cờ
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        //chạy biến itent
         startActivity(intent);
         finish();
     }
