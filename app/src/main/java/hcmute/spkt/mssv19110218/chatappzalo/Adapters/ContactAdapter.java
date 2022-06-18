@@ -33,6 +33,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     }
 
     @SuppressLint("NotifyDataSetChanged")
+    //* Tạo hàm constructor cho class
     public ContactAdapter(Context context, ArrayList<Contact> contacts) {
         this.context = context;
         this.contacts = contacts;

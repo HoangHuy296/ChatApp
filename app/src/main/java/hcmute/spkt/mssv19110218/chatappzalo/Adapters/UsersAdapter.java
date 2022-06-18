@@ -35,6 +35,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
     ArrayList<User> users; //Khởi tạo danh sách user
     String currentUserName;   //khởi tạo curent UserName
 
+    //* KHởi tạo constructor cho class
     public UsersAdapter(Context context, ArrayList<User> users) {
         this.context = context;
         this.users = users;

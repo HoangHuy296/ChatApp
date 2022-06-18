@@ -28,6 +28,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
     final int ITEM_SEND = 1;
     final int ITEM_RECEIVE = 2;
 
+    //* Khởi tạo constructor cho class
     public MessageAdapter(Context context, ArrayList<Message> messages) {
         this.context = context;
         this.messages = messages;

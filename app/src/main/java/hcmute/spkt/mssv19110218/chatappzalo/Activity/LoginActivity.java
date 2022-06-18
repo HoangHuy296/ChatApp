@@ -106,10 +106,12 @@ public class LoginActivity extends AppCompatActivity {
         DatabaseReference reference = database.getReference("users");
 
 
+        //* Bắt sự kiện khi có sự thay đổi về dữ liệu
         reference.addValueEventListener(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //* Với mỗi user trên firebase thì hệ thống sẽ lấy ra và lưu vào danh sách users
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     User user = dataSnapshot.getValue(User.class);
@@ -117,9 +119,12 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 usersAdapter.notifyDataSetChanged();
 
+                //* Với mối user trong danh sách được lưu ở trên
+                //* hệ thống sẽ kiểm tra điều kiện login
                 for (User user : users) {
-                    String phone = user.getPhoneNumber();
-                    String pass = user.getPassword();
+                    String phone = user.getPhoneNumber();//* lấy ra sdt của user
+                    String pass = user.getPassword();//* lấy ra pass của user
+                    //* DÙng điều kiện so sánh để xác định đăng nhập thành công hay không?
                     if (phone.equals(phoneLogin) && pass.equals(passLogin)) {
                         Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
