@@ -34,17 +34,17 @@ import hcmute.spkt.mssv19110218.chatappzalo.databinding.ActivityUserProfileBindi
 
 public class UserProfileActivity extends AppCompatActivity {
 
-    ActivityUserProfileBinding binding;
-    FirebaseAuth auth;
-    FirebaseUser user;
-    FirebaseDatabase database;
-    FirebaseStorage storage;
-    StorageReference storageReference;
-    DatabaseReference databaseReference;
+    ActivityUserProfileBinding binding; //khởi tạo các view trong UserProfileActivity
+    FirebaseAuth auth; //khởi tạo FirebaseAuth
+    FirebaseUser user; //Khởi tạo FirebaseUser
+    FirebaseDatabase database; //khởi tạo database
+    FirebaseStorage storage; //khởi tạo FirebaseStorage
+    StorageReference storageReference; //khởi tạo StorageReference
+    DatabaseReference databaseReference; //khởi tạo DatabaseReference
 
     ProgressDialog dialog;
     Uri imageUri; //Khởi tạo imageUri
-    String ImageProfile, nameProfile;
+    String ImageProfile, nameProfile; //khởi tạo ImageProfile, nameProfile
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,20 +52,31 @@ public class UserProfileActivity extends AppCompatActivity {
         binding = ActivityUserProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        //set action bar là toolbar trong layout
         setSupportActionBar(binding.toolbar);
+        //lấy trangjh thái hiện tại của database
         auth = FirebaseAuth.getInstance();
+        //lấy user hiện tại
         user = auth.getCurrentUser();
+        //khởi tạo database và lấy trạng thái
         database = FirebaseDatabase.getInstance();
+        //khởi tạo storage và lấy trạng thái
         storage = FirebaseStorage.getInstance();
+        //sự kiện nút back
         btnBack();
+        //lấy userprofile
         getProfileCurrentUser(user);
+        //mở folder set avatar
         binding.avatar.setOnClickListener(new View.OnClickListener() {
+            //gọi hàm addNewImage
             @Override
             public void onClick(View v) {
                 addNewImage();
             }
         });
+        //nút save để lưu ảnh mới
         binding.btnSave.setOnClickListener(new View.OnClickListener() {
+            //gọi hàm uploadProfileImage
             @Override
             public void onClick(View v) {
                 uploadProfileImage();
@@ -76,11 +87,11 @@ public class UserProfileActivity extends AppCompatActivity {
     //tương tự hàm set avatar ở Create Account
     private void addNewImage() {
         Intent intent = new Intent();
-        //* Sử dụng để người dùng có thể select image từ library
+        //Sử dụng để người dùng có thể select image từ library
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        //* Set type
+        //set type
         intent.setType("image/*");
-        //* Gọ hàm startActivityForResult để gọi máy ảnh
+        //Gọi hàm startActivityForResult để gọi máy ảnh
         startActivityForResult(intent, 25);
     }
 
@@ -116,24 +127,24 @@ public class UserProfileActivity extends AppCompatActivity {
         dialog.show();
         //Nêu imageUri != null
         if (imageUri != null) {
-            //* Gán giá đường dẫn cho storageReference
+            //gán giá đường dẫn cho storageReference
             storageReference = storage.getReference().child("Profiles").child(user.getUid());
-            //* Thực hiện put hình ảnh lên firebase
+            //thực hiện put hình ảnh lên firebase
             storageReference.putFile(imageUri).addOnCompleteListener(task -> {
-                //* Nếu việc upload thành công
+                //nếu việc upload thành công
                 if (task.isSuccessful()) {
-                    //* Tắt thông báo show của dialog
+                    //tắt thông báo show của dialog
                     dialog.dismiss();
-                    //* Sử dụng storageReference và getDownloadUrl()
+                    //sử dụng storageReference và getDownloadUrl()
                     storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-                        //* khởi tạo biến uimageUrl để lấy đường dẫn của hình vừa được upload
+                        //khởi tạo biến uimageUrl để lấy đường dẫn của hình vừa được upload
                         String imageUrl = uri.toString();
-                        //* Sử dụng databaseReference để lấy đường dẫn trên firebase
+                        //sử dụng databaseReference để lấy đường dẫn trên firebase
                         databaseReference = FirebaseDatabase.getInstance().getReference("users");
-                        //* Sử dụng databaseReference để tham chiếu đến children trong nut cha "user"
-                        databaseReference.child(user.getUid()) //* Lấy giá trị uid của current user
-                                .child("profileImage") //* Lấy giá tị của proifleImage
-                                .setValue(imageUrl) //* Set giá trị cho imageUrl cho "profileImage"
+                        //sử dụng databaseReference để tham chiếu đến children trong nut cha "user"
+                        databaseReference.child(user.getUid()) //lấy giá trị uid của current user
+                                .child("profileImage") //lấy giá tị của proifleImage
+                                .setValue(imageUrl) //set giá trị cho imageUrl cho "profileImage"
                                 .addOnSuccessListener(unused -> {
                                 });
                     });
@@ -145,23 +156,23 @@ public class UserProfileActivity extends AppCompatActivity {
     private void getProfileCurrentUser(FirebaseUser user) {
         if(user!=null)
         {
-            //* Tạo phoneProfile kiểu string --> để lấy giá trị phone của user current
+            //tạo phoneProfile kiểu string
             String phoneProfile = user.getPhoneNumber();
-            //* Tạo uid kiểu string --> để lấy giá trị uid của user current
+            //tạo uid kiểu string
             String uid = user.getUid();
-            //* Sử dụng databaseReference và gét giá trị đến đường dẫn trên firebase
+            //sử dụng databaseReference và gét giá trị đến đường dẫn trên firebase
             databaseReference = database.getReference("users").child(uid);
-            //* Sử dụng databaseReference để lắng nghe sự kiện thay đổi
+            //sử dụng databaseReference để lắng nghe sự kiện thay đổi
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    //* Sử dụng model user để nhận giá trị từ realtime database
+                    //sử dụng model user để nhận giá trị từ realtime database
                     User user = snapshot.getValue(User.class);
-                    //* Lấy giá trị name của curent user và gán vào nameProfile
+                    //lấy giá trị name của curent user và gán vào nameProfile
                     nameProfile = Objects.requireNonNull(user).getName();
-                    //* Lấy đường dẫn của hình ảnh và gán vào urlImageProfile
+                    //lấy đường dẫn của hình ảnh và gán vào urlImageProfile
                     ImageProfile = user.getAvatar();
-                    //* Gọi hàm setDataForCurrentUser và truyền vào các tham số đã được khởi tạo ở trên
+                    //gọi hàm setDataForCurrentUser và truyền vào các tham số đã được khởi tạo ở trên
                     setDataForCurrentUser(ImageProfile, nameProfile, phoneProfile);
                 }
 
@@ -174,14 +185,14 @@ public class UserProfileActivity extends AppCompatActivity {
     }
     private void setDataForCurrentUser(String urlImageProfile, String nameProfile, String
             phoneProfile) {
-        //* Sử dụng Glide để add image từ đường dẫn vào trong imgAvt được tạo trong fragment_setting.xml
+        //Sử dụng Glide để add image từ đường dẫn vào trang UserProfileActivity
         Glide.with(UserProfileActivity.this)
                 .load(urlImageProfile)
                 .placeholder(R.drawable.avatar)
                 .into(binding.avatar);
-        //* Gán giá trị nameProfile cho txtName
+        //gán giá trị nameProfile cho name
         binding.name.setText(nameProfile);
-        //* Gán giá trị cho phoneProfile cho txtPhone
+        //gán giá trị cho phoneProfile cho editPhone
         binding.editPhone.setText(phoneProfile);
     }
 }
